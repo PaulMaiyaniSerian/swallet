@@ -53,6 +53,9 @@ class RegisterSerializer(serializers.ModelSerializer):
         user.save()
 
         # print(validated_data)
+        # check if phone is greater than 12charachters
+        if len(validated_data["phone"]) != 12:
+            raise serializers.ValidationError({"phone": "phone number should have 12characters format 2547xxx"})
 
         # create Userwallet after user is saved 
         UserWallet.objects.create(

@@ -1,0 +1,11 @@
+test c2b_confirmation_hook
+test register_mpesa_callbackurls
+test simulate_c2b_transaction
+test stk_push_webhook
+test stk_push_process
+test c2btransactionlist
+test lmntransactionview
+
+create joint transactions view
+add celery
+add drf-yasg

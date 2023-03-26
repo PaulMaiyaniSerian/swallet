@@ -47,6 +47,8 @@ INSTALLED_APPS = [
     "corsheaders",
     # apps
     'accounts.apps.AccountsConfig',
+    'payments.apps.PaymentsConfig',
+    "drf_spectacular",
 ]
 
 
@@ -54,8 +56,16 @@ REST_FRAMEWORK = {
     
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_simplejwt.authentication.JWTAuthentication',
-    )
-    
+    ),
+    "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
+
+}
+
+SPECTACULAR_SETTINGS = {
+"TITLE": "Blog API Project",
+"DESCRIPTION": "A sample blog to learn about DRF",
+"VERSION": "1.0.0",
+# OTHER SETTINGS
 }
 
 
@@ -165,6 +175,8 @@ CONFIRMATIONURL = f"https://{ALLOWED_HOSTS[-1]}/api/v1/payments/c2b_confirmation
 VALIDATIONURL = f"https://{ALLOWED_HOSTS[-1]}/api/v1/payments/c2b_validation_hook"
 STKPUSH_CALLBACKURL = f"https://{ALLOWED_HOSTS[-1]}/api/v1/payments/stk_push_webhook"
 
+print(CONFIRMATIONURL)
+print(VALIDATIONURL)
 
 SHORTCODE=env("SHORTCODE")
 # for simulating c2b transactions

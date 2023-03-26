@@ -7,6 +7,7 @@ def add_to_wallet(account_number, amount):
     try:
         user_wallet = UserWallet.objects.get(account_number=account_number)
         user_wallet.balance += decimal.Decimal(amount)
+        user_wallet.save()
         return user_wallet
     
     except UserWallet.DoesNotExist:

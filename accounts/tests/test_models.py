@@ -1,13 +1,12 @@
 from django.test import TestCase
 
 # Create your tests here.
-from django.test import TestCase
 from django.urls import reverse
 from ..models import UserWallet, User
 
 from django.db.utils import IntegrityError
 
-class UserWalletTest(TestCase):
+class UserWalletModelTest(TestCase):
     @classmethod
     def setUpTestData(cls):
         cls.user = User.objects.create_user(

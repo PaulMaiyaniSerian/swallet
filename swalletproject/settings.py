@@ -165,8 +165,6 @@ CONFIRMATIONURL = f"https://{ALLOWED_HOSTS[-1]}/api/v1/payments/c2b_confirmation
 VALIDATIONURL = f"https://{ALLOWED_HOSTS[-1]}/api/v1/payments/c2b_validation_hook"
 STKPUSH_CALLBACKURL = f"https://{ALLOWED_HOSTS[-1]}/api/v1/payments/stk_push_webhook"
 
-print(CONFIRMATIONURL)
-print(VALIDATIONURL)
 
 SHORTCODE=env("SHORTCODE")
 # for simulating c2b transactions

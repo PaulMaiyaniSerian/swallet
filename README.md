@@ -73,3 +73,7 @@ Login to daraja and use the sandbox simulate c2b providing billrefnumber as the 
 
 ## Balances
 -call the balance endpoint after transaction process to receive the updated wallet balance
+
+## Online Version
+[endpoints documentation](https://swalletserian.pythonanywhere.com/)
+

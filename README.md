@@ -70,3 +70,6 @@ Login to daraja and use the sandbox simulate c2b providing billrefnumber as the 
 ## Extras
 -use the registerurls endpoint and provide your confirmation and validationurl that will be used to receive responses by safaricom c2b upon completion of the transaction
 
+
+## Balances
+-call the balance endpoint after transaction process to receive the updated wallet balance

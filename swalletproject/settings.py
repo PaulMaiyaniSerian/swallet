@@ -62,8 +62,8 @@ REST_FRAMEWORK = {
 }
 
 SPECTACULAR_SETTINGS = {
-"TITLE": "Blog API Project",
-"DESCRIPTION": "A sample blog to learn about DRF",
+"TITLE": "Swallet API Project",
+"DESCRIPTION": "Endpoints for swallet app with c2b and stk push",
 "VERSION": "1.0.0",
 # OTHER SETTINGS
 }

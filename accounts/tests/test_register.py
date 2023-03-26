@@ -46,6 +46,13 @@ class RegisterApiTestCase(APITestCase):
             "phone": "254759288123"
         }
 
+        cls.invalid_phone_credentials = {
+            "username": "testuser2",
+            "password": "StrongPassword",
+            "password2": "StrongPassword",
+            "phone": "25475928812323"
+        }
+
         
 
         
@@ -132,6 +139,16 @@ class RegisterApiTestCase(APITestCase):
         self.assertEqual(response.status_code,status.HTTP_400_BAD_REQUEST)
         self.assertEqual(set(json_response.keys()), set(['password']))
 
+    # check if phone has 12characters
+    def test_phone_validity(self):
+        response = self.client.post(
+            path=reverse("register_normal_user"),
+            data=self.invalid_phone_credentials
+        )
+        json_response = response.json()
+
+        self.assertEqual(response.status_code,status.HTTP_400_BAD_REQUEST)
+        self.assertEqual(set(json_response.keys()), set(['phone']))
 
 
 

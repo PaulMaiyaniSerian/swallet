@@ -8,6 +8,7 @@ from .views import (
     C2BTransactionListView,
     StkPushProcessApiView,
     StkPushWebHookApiView,
+    JointTransactionListView,
 )
 
 urlpatterns = [
@@ -22,4 +23,7 @@ urlpatterns = [
     path('simulate_c2b_transaction', SimulateC2BTransactionView.as_view(), name="c2b_transaction_simulate"),
     path('stk_push_process', StkPushProcessApiView.as_view(), name="stk_push_process"),
     path('c2btransaction/list', C2BTransactionListView.as_view(), name="transaction_list_view"),
+
+    path('joint_transactions/list', JointTransactionListView.as_view(), name="joint_transaction_list_view"),
+
 ]

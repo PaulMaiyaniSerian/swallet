@@ -9,11 +9,11 @@ from rest_framework.permissions import IsAuthenticated
 from .mpesa import utils, helpers
 
 # models import
-from .models import C2BMpesaTransaction, LNMTransaction
+from .models import C2BMpesaTransaction, LNMTransaction, JointLmnC2BTransaction
 from accounts.models import UserWallet
 
 # serializers
-from .serializers import C2BMpesaTransactionSerializer
+from .serializers import C2BMpesaTransactionSerializer, JointLmnC2BTransactionSerializer
 
 class RegisterMpesaCallBackUrlsView(generics.GenericAPIView):
 
@@ -62,10 +62,17 @@ class SimulateC2BTransactionView(generics.GenericAPIView):
             return Response(data=message, status=status.HTTP_400_BAD_REQUEST)
 
 class StkPushProcessApiView(generics.GenericAPIView):
-
+    permission_classes=[IsAuthenticated]
     def post(self, request):
         # print(request.data)
-        account_number = request.data.get("account_number")
+        account_number = None
+        # get logged in user account number
+        try:
+            account_number = UserWallet.objects.get(user=request.user).account_number
+        except UserWallet.DoesNotExist:
+            account_number = request.data.get("account_number")
+
+
         amount = request.data.get("amount")
         number_to_pay_with = request.data.get("number_to_pay_with")
 
@@ -115,7 +122,6 @@ class C2BTransactionListView(generics.GenericAPIView):
 
 class C2BConfirmationView(generics.GenericAPIView):
     
-
     def post(self, request):
         data = request.data
         print(data, "confirmation")
@@ -125,3 +131,23 @@ class C2BConfirmationView(generics.GenericAPIView):
 
 
         return Response(message, status=status_code)
+
+
+class JointTransactionListView(generics.GenericAPIView):
+    permission_classes=[IsAuthenticated]
+
+    def get(self, request):
+        # get all transacations that match the Userwallet from billrefnumber
+        try:
+            user_wallet = UserWallet.objects.get(user=request.user)
+        except UserWallet.DoesNotExist:
+            message = {
+                "wallet": "wallet for target user does not exist",
+            }
+            return Response(message, status=status.HTTP_404_NOT_FOUND)
+
+        transactions = JointLmnC2BTransaction.objects.filter(target_accont=user_wallet.account_number)
+
+        serializer = JointLmnC2BTransactionSerializer(transactions, many=True)
+
+        return Response(serializer.data, status=status.HTTP_200_OK)

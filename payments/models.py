@@ -38,3 +38,15 @@ class LNMTransaction(models.Model):
     def __str__(self):
         return f"payment to account {self.checkoutRequestID}"
 
+class JointLmnC2BTransaction(models.Model):
+    TRANS_TYPES = (
+        ("DEPOSIT", "DEPOSIT"),
+    )
+    mpesa_code = models.CharField(max_length=100)
+    amount = models.CharField(max_length=100)
+    target_accont = models.CharField(max_length=12, unique=True, null=True, blank=True)
+    type = models.CharField(max_length=10, choices=TRANS_TYPES)
+    transaction_time = models.DateTimeField()
+
+    def __str__(self):
+        return self.target_accont

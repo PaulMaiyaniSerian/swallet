@@ -1,7 +1,7 @@
 from django.contrib import admin
 
 # Register your models here.
-from .models import C2BMpesaTransaction, LNMTransaction
+from .models import C2BMpesaTransaction, LNMTransaction, JointLmnC2BTransaction
 
 class MpesaTransactionAdmin(admin.ModelAdmin):
     list_display = [
@@ -28,3 +28,14 @@ class LNMTransactionsAdmin(admin.ModelAdmin):
     ]
 
 admin.site.register(LNMTransaction, LNMTransactionsAdmin)
+
+class JointLmnC2BTransactionAdmin(admin.ModelAdmin):
+    list_display = [
+        "mpesa_code", 
+        "amount", 
+        "target_accont",
+        "type",
+        "transaction_time", 
+    ]
+
+admin.site.register(JointLmnC2BTransaction, JointLmnC2BTransactionAdmin)

@@ -19,8 +19,8 @@ from drf_spectacular.views import SpectacularAPIView,SpectacularRedocView,Specta
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('api/v1/accounts/', include('accounts.urls')),
-    path('api/v1/payments/', include('payments.urls')),
+    path('api/accounts/v1/', include('accounts.urls')),
+    path('api/payments/v1/', include('payments.urls')),
     # documentation
     path("api/schema/", SpectacularAPIView.as_view(), name="schema"),
     path("api/schema/redoc/", SpectacularRedocView.as_view(url_name="schema"), name="redoc",),

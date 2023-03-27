@@ -28,7 +28,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = env("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = env("DEBUG")
 
 ALLOWED_HOSTS = ["127.0.0.1",env("HOST_DOMAIN")]
 
@@ -171,12 +171,12 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 
 # mpesa configs
-CONFIRMATIONURL = f"https://{ALLOWED_HOSTS[-1]}/api/v1/payments/c2b_confirmation_hook"
-VALIDATIONURL = f"https://{ALLOWED_HOSTS[-1]}/api/v1/payments/c2b_validation_hook"
-STKPUSH_CALLBACKURL = f"https://{ALLOWED_HOSTS[-1]}/api/v1/payments/stk_push_webhook"
+CONFIRMATIONURL = f"https://{ALLOWED_HOSTS[-1]}/api/payments/v1/c2b_confirmation_hook"
+VALIDATIONURL = f"https://{ALLOWED_HOSTS[-1]}/api/payments/v1/c2b_validation_hook"
+STKPUSH_CALLBACKURL = f"https://{ALLOWED_HOSTS[-1]}/api/payments/v1/stk_push_webhook"
 
-print(CONFIRMATIONURL)
-print(VALIDATIONURL)
+# print(CONFIRMATIONURL)
+# print(VALIDATIONURL)
 
 SHORTCODE=env("SHORTCODE")
 # for simulating c2b transactions

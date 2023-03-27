@@ -13,9 +13,16 @@ from .models import C2BMpesaTransaction, LNMTransaction, JointLmnC2BTransaction
 from accounts.models import UserWallet
 
 # serializers
-from .serializers import C2BMpesaTransactionSerializer, JointLmnC2BTransactionSerializer
+from .serializers import (
+    C2BMpesaTransactionSerializer, 
+    JointLmnC2BTransactionSerializer, 
+    LNMTransactionSerializer,
+    C2BMpesaTransactionViewSerializer,
+    StkPushSerializer
+)
 
 class RegisterMpesaCallBackUrlsView(generics.GenericAPIView):
+    permission_classes=[IsAuthenticated]
 
     def post(self, request):
         result = utils.register_callbackurls()
@@ -37,6 +44,7 @@ class C2BValidationView(generics.GenericAPIView):
 
 
 class C2BConfirmationView(generics.GenericAPIView):
+    serializer_class = C2BMpesaTransactionSerializer
     
     def post(self, request):
         data = request.data
@@ -51,6 +59,9 @@ class C2BConfirmationView(generics.GenericAPIView):
 
 
 class SimulateC2BTransactionView(generics.GenericAPIView):
+    permission_classes=[IsAuthenticated]
+    serializer_class = C2BMpesaTransactionViewSerializer
+
 
     def post(self, request):
         # print(request.data)
@@ -75,6 +86,7 @@ class SimulateC2BTransactionView(generics.GenericAPIView):
 
 class StkPushProcessApiView(generics.GenericAPIView):
     permission_classes=[IsAuthenticated]
+    serializer_class=StkPushSerializer
     def post(self, request):
         # print(request.data)
         account_number = None
@@ -123,7 +135,13 @@ class C2BTransactionListView(generics.GenericAPIView):
 
     def get(self, request):
         # get all transacations that match the Userwallet from billrefnumber
-        user_wallet = UserWallet.objects.get(user=request.user)
+        try:
+            user_wallet = UserWallet.objects.get(user=request.user)
+        except UserWallet.DoesNotExist:
+            message = {
+                "wallet": "wallet for target user does not exist",
+            }
+            return Response(data=message, status=status.HTTP_400_BAD_REQUEST)
         transactions = C2BMpesaTransaction.objects.filter(billRefNumber=user_wallet.account_number)
 
         serializer = C2BMpesaTransactionSerializer(transactions, many=True)

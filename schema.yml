@@ -1,0 +1,290 @@
+openapi: 3.0.3
+info:
+  title: Blog API Project
+  version: 1.0.0
+  description: A sample blog to learn about DRF
+paths:
+  /api/v1/accounts/register_user:
+    post:
+      operationId: accounts_register_user_create
+      tags:
+      - accounts
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Register Normal User'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Register Normal User'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Register Normal User'
+        required: true
+      security:
+      - jwtAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Register Normal User'
+          description: ''
+  /api/v1/accounts/token/:
+    post:
+      operationId: accounts_token_create
+      description: |-
+        Takes a set of user credentials and returns an access and refresh JSON web
+        token pair to prove the authentication of those credentials.
+      tags:
+      - accounts
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TokenObtainPair'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/TokenObtainPair'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/TokenObtainPair'
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TokenObtainPair'
+          description: ''
+  /api/v1/accounts/token/refresh/:
+    post:
+      operationId: accounts_token_refresh_create
+      description: |-
+        Takes a refresh type JSON web token and returns an access type JSON web
+        token if the refresh token is valid.
+      tags:
+      - accounts
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TokenRefresh'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/TokenRefresh'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/TokenRefresh'
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TokenRefresh'
+          description: ''
+  /api/v1/accounts/wallet/balance:
+    get:
+      operationId: accounts_wallet_balance_retrieve
+      tags:
+      - accounts
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserWallet'
+          description: ''
+  /api/v1/payments/c2b_confirmation_hook:
+    post:
+      operationId: payments_c2b_confirmation_hook_create
+      description: |-
+        sample response
+        {
+            'TransactionType': 'Pay Bill',
+            'TransID': 'RCO41MKB14',
+            'TransTime': '20230324103853',
+            'TransAmount': '1.00',
+            'BusinessShortCode': '174379',
+            'BillRefNumber': '254113953355',
+            'InvoiceNumber': '',
+            'OrgAccountBalance': '943728.00',
+            'ThirdPartyTransID': '',
+            'MSISDN': 'bbff37cea44ac0b2d964ee0dfb8d2df8513dc7ba1b36129a929fc3fbd6dd4af4',
+            'FirstName': 'John',
+            'MiddleName': '',
+            'LastName': ''
+            }
+      tags:
+      - payments
+      security:
+      - jwtAuth: []
+      - {}
+      responses:
+        '200':
+          description: No response body
+  /api/v1/payments/c2b_validation_hook:
+    post:
+      operationId: payments_c2b_validation_hook_create
+      tags:
+      - payments
+      security:
+      - jwtAuth: []
+      - {}
+      responses:
+        '200':
+          description: No response body
+  /api/v1/payments/c2btransaction/list:
+    get:
+      operationId: payments_c2btransaction_list_retrieve
+      tags:
+      - payments
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          description: No response body
+  /api/v1/payments/register_c2b_mpesa_callbackurls:
+    post:
+      operationId: payments_register_c2b_mpesa_callbackurls_create
+      tags:
+      - payments
+      security:
+      - jwtAuth: []
+      - {}
+      responses:
+        '200':
+          description: No response body
+  /api/v1/payments/simulate_c2b_transaction:
+    post:
+      operationId: payments_simulate_c2b_transaction_create
+      tags:
+      - payments
+      security:
+      - jwtAuth: []
+      - {}
+      responses:
+        '200':
+          description: No response body
+  /api/v1/payments/stk_push_process:
+    post:
+      operationId: payments_stk_push_process_create
+      tags:
+      - payments
+      security:
+      - jwtAuth: []
+      - {}
+      responses:
+        '200':
+          description: No response body
+  /api/v1/payments/stk_push_webhook:
+    post:
+      operationId: payments_stk_push_webhook_create
+      description: |-
+        {
+            'Body': {
+                'stkCallback': {
+                    'MerchantRequestID': '3786-9664944-1',
+                    'CheckoutRequestID': 'ws_CO_24032023165155703113953355',
+                    'ResultCode': 0,
+                    'ResultDesc': 'The service request is processed successfully.',
+                    'CallbackMetadata': {
+                        'Item': [
+                            {'Name': 'Amount', 'Value': 1.0},
+                            {'Name': 'MpesaReceiptNumber', 'Value': 'RCO4JCX8AW'},
+                            {'Name': 'Balance'},
+                            {'Name': 'TransactionDate', 'Value': 20230324165208},
+                            {'Name': 'PhoneNumber', 'Value': 254113953355}]
+                    }
+                }
+            }
+        }
+      tags:
+      - payments
+      security:
+      - jwtAuth: []
+      - {}
+      responses:
+        '200':
+          description: No response body
+components:
+  schemas:
+    Register Normal User:
+      type: object
+      properties:
+        username:
+          type: string
+        password:
+          type: string
+          writeOnly: true
+        password2:
+          type: string
+          writeOnly: true
+        phone:
+          type: string
+          writeOnly: true
+      required:
+      - password
+      - password2
+      - phone
+      - username
+    TokenObtainPair:
+      type: object
+      properties:
+        username:
+          type: string
+          writeOnly: true
+        password:
+          type: string
+          writeOnly: true
+        access:
+          type: string
+          readOnly: true
+        refresh:
+          type: string
+          readOnly: true
+      required:
+      - access
+      - password
+      - refresh
+      - username
+    TokenRefresh:
+      type: object
+      properties:
+        access:
+          type: string
+          readOnly: true
+        refresh:
+          type: string
+          writeOnly: true
+      required:
+      - access
+      - refresh
+    UserWallet:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        account_number:
+          type: string
+          nullable: true
+          maxLength: 12
+        balance:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,8}(?:\.\d{0,2})?$
+        user:
+          type: integer
+      required:
+      - id
+      - user
+  securitySchemes:
+    jwtAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT

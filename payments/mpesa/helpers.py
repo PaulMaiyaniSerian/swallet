@@ -29,7 +29,7 @@ def process_stk_hookdata(data):
             lnm_transaction.save()
 
         except LNMTransaction.DoesNotExist:
-            print("error data does not exist")
+            pass
 
         
     elif resultCode == 0:
@@ -87,7 +87,8 @@ def process_stk_hookdata(data):
             # user_wallet.save()
 
         except LNMTransaction.DoesNotExist:
-            print("error data does not exist")
+            # print("error data does not exist")
+            pass
 
     else:
         print("another result code received")

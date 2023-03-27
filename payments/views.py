@@ -34,7 +34,19 @@ class C2BValidationView(generics.GenericAPIView):
         print(request.data, "validations")
 
         return Response(status=status.HTTP_200_OK)
+
+
+class C2BConfirmationView(generics.GenericAPIView):
     
+    def post(self, request):
+        data = request.data
+        print(data, "confirmation")
+        # call c2b helper to save trans to db
+
+        message, status_code = helpers.process_c2b_confirmation_data(data)
+
+
+        return Response(message, status=status_code)
 
 
 
@@ -119,18 +131,6 @@ class C2BTransactionListView(generics.GenericAPIView):
         return Response(serializer.data, status=status.HTTP_200_OK)
     
 
-
-class C2BConfirmationView(generics.GenericAPIView):
-    
-    def post(self, request):
-        data = request.data
-        print(data, "confirmation")
-        # call c2b helper to save trans to db
-
-        message, status_code = helpers.process_c2b_confirmation_data(data)
-
-
-        return Response(message, status=status_code)
 
 
 class JointTransactionListView(generics.GenericAPIView):

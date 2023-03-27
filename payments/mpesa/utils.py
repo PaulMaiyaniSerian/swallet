@@ -1,18 +1,25 @@
 import requests
 from datetime import datetime
 import base64
+import json
 from requests.auth import HTTPBasicAuth
 
 from requests.exceptions import ConnectionError
 
 from django.conf import settings
 from ..models import LNMTransaction
+from rest_framework import status
 
 CONNECTION_ERROR_RESPONSE = {
         "requestId": None,
         "errorMessage": "Service is temporarily not available.Please try again later.(Internet Connection)",
         "errorCode": "500"
     }
+TOKEN_ERROR_RESPONSE = {
+    "requestId": None,
+    "errorMessage": "Invalid Consumer key and secret",
+    "errorCode": "500"
+}
 
 def get_access_token():
     consumer_key = settings.CONSUMER_KEY
@@ -22,8 +29,14 @@ def get_access_token():
 
     try:
         response = requests.get(url, auth=HTTPBasicAuth(consumer_key, consumer_secret))
-        access_token = response.json()["access_token"]
-        return access_token
+
+        if response.status_code == 400:
+            message = {
+                "token": "invalid consumer key or secret"
+            }
+            return (message, status.HTTP_400_BAD_REQUEST)
+        else:
+            return (response.json(), status.HTTP_200_OK)
     
     # if cannot connect to safaricom return None
     except ConnectionError:
@@ -32,11 +45,13 @@ def get_access_token():
 
 
 def register_callbackurls():
-    access_token = get_access_token()
+    token_response = get_access_token()
 
-    if not access_token:
-        return CONNECTION_ERROR_RESPONSE 
-
+    if token_response[1] == status.HTTP_400_BAD_REQUEST:
+        return TOKEN_ERROR_RESPONSE
+    
+    access_token_message, _ = token_response
+    access_token = access_token_message["access_token"]
 
     url = settings.MPESA_REGISTER_CALLBACK_URL
     headers = {
@@ -51,17 +66,21 @@ def register_callbackurls():
     
     try:
         response = requests.post(url, json=data, headers=headers)
-        return response.json()
+        # print(response.json())
+        return (response.json())
     except ConnectionError:
         return CONNECTION_ERROR_RESPONSE
 
 
 def stk_push(phone, amount, accountReference):
 
-    access_token = get_access_token()
+    token_response = get_access_token()
 
-    if not access_token:
-        return CONNECTION_ERROR_RESPONSE
+    if token_response[1] == status.HTTP_400_BAD_REQUEST:
+        return TOKEN_ERROR_RESPONSE
+    
+    access_token_message, _ = token_response
+    access_token = access_token_message["access_token"]
 
 
     url = settings.PROCESS_STKPUSH_URL
@@ -120,10 +139,13 @@ def stk_push(phone, amount, accountReference):
 # todo add serializer for amount
 def simulate_c2b_transaction(account_number, amount):
     # bill refnumber is target account to add the funds to
-    access_token = get_access_token()
+    token_response = get_access_token()
 
-    if not access_token:
-        return CONNECTION_ERROR_RESPONSE 
+    if token_response[1] == status.HTTP_400_BAD_REQUEST:
+        return TOKEN_ERROR_RESPONSE
+    
+    access_token_message, _ = token_response
+    access_token = access_token_message["access_token"]
 
     url = settings.C2B_SIMULATE_URL
 
@@ -138,7 +160,6 @@ def simulate_c2b_transaction(account_number, amount):
         "Msisdn": int(settings.TESTMSISDN),
         "BillRefNumber": account_number
     }
-    print(data)
     
     try:
         response = requests.post(url, json=data, headers=headers)
